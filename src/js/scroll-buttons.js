@@ -1,5 +1,5 @@
 'use strict';
-import scrollTo from 'scroll-to';
+
 function jumpToStart() {
   const scrollOptions = {
     left: 0,

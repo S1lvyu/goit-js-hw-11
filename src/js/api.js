@@ -31,7 +31,7 @@ const loadMoreBtn = document.querySelector('.load-more');
 const jumpToStartBtn = document.querySelector('#jump-to-start');
 const jumpToEndBtn = document.querySelector('#jump-to-end');
 let markup = ``;
-delete axios.defaults.headers.common['Permissions-Policy'];
+
 async function getContent() {
   try {
     const response = await axios.get(API, { params });
