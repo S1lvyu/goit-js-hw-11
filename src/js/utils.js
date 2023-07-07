@@ -58,6 +58,11 @@ function onErrorEndOfResults() {
     "We're sorry, but you've reached the end of search results."
   );
 }
+function getAPIUrl(api, params) {
+  const url = new URL(api);
+  Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+  return url.toString();
+}
 export {
   smoothScroll,
   createHtmlMarkup,
@@ -67,4 +72,5 @@ export {
   resetPage,
   onErrorNoMatches,
   onErrorEndOfResults,
+  getAPIUrl,
 };
