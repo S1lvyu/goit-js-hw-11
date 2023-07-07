@@ -1,5 +1,5 @@
 'use strict';
-import axios from 'axios';
+import Axios from 'axios';
 import Notiflix from 'notiflix';
 import simpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -34,7 +34,7 @@ let markup = ``;
 
 async function getContent() {
   try {
-    const response = await axios.get(API, { params });
+    const response = await Axios.get(API, { params });
     const data = await response.data.hits;
     const pages = Math.ceil(response.data.totalHits / params.per_page);
     if (data.length > 1 && params.page === 1) {
