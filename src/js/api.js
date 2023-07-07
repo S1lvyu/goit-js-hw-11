@@ -1,5 +1,4 @@
 'use strict';
-import axios from 'axios';
 import Notiflix from 'notiflix';
 import simpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -12,6 +11,7 @@ import {
   resetPage,
   onErrorNoMatches,
   onErrorEndOfResults,
+  getAPIUrl,
 } from './utils';
 import { jumpToEnd, jumpToStart } from './scroll-buttons';
 const API = 'https://pixabay.com/api/';
@@ -35,20 +35,21 @@ let lightbox;
 
 async function getContent() {
   try {
-    const response = await axios.get(API, { params });
-    const data = await response.data.hits;
-    const pages = Math.ceil(response.data.totalHits / params.per_page);
-    if (data.length > 1 && params.page === 1) {
-      Notiflix.Notify.success(
-        `Hooray! We found ${response.data.totalHits} images.`
-      );
+    const response = await fetch(getAPIUrl(API, params));
+    const data = await response.json();
+    const hits = data.hits;
+    const totalHits = data.totalHits;
+    const pages = Math.ceil(totalHits / params.per_page);
+
+    if (hits.length > 1 && params.page === 1) {
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
     }
-    if (data.length === 0) {
+    if (hits.length === 0) {
       gallery.innerHTML = '';
       onErrorNoMatches();
       disableBtn(loadMoreBtn);
     } else {
-      markup += await createHtmlMarkup(data);
+      markup += await createHtmlMarkup(hits);
       insertMarkup(markup);
 
       if (params.page >= pages) {
@@ -73,7 +74,7 @@ function onSubmit(event) {
   const form = event.currentTarget;
   params.q = form.elements.searchQuery.value.trim();
   if (!params.q) {
-    Notiflix.Notify.failure('Sorry, you have write something');
+    Notiflix.Notify.failure('Sorry, you have to write something');
     form.reset();
     return;
   }
@@ -83,6 +84,7 @@ function onSubmit(event) {
   markup = ``;
   form.reset();
 }
+
 function loadMore() {
   incrementPage(params);
   getContent();
